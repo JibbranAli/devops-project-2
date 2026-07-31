@@ -1,1 +1,4 @@
+[worker]
 192.168.1.117 ansible_user=root ansible_password=redhat
+[master]
+ 192.168.1.17  ansible_user=root ansible_password=redhat
