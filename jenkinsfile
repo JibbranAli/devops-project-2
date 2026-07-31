@@ -10,20 +10,20 @@ pipeline {
 
         stage('Build Image') {
             steps {
-                sh 'docker build -t meditation:v1 .'
+                sh 'sudo docker build -t meditation:v1 .'
             }
         }
 
         stage('Export Image') {
             steps {
-                sh 'docker save meditation:v1 -o meditation.tar'
+                sh 'sudo docker save meditation:v1 -o meditation.tar'
             }
         }
 
         stage('Deploy') {
             steps {
                 sh '''
-                    ansible-playbook \
+                    sudo ansible-playbook \
                     -i ansible/inventory \
                     ansible/deploy.yml
                 '''
