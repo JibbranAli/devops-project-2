@@ -1,12 +1,6 @@
 ---
 - hosts: worker
   tasks:
-    - name: Remove Old Image
-      community.docker.docker_image:
-        name: meditation
-        state: absent
-        force_absent: true
-      ignore_errors: true
 
     - name: Copy Docker image tar
       ansible.builtin.copy:
