@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LW Project 2 | Stress-Free Sanctuary</title>
+  
+  <style>
+    /* CSS Variables for Palette & Smooth Transitions */
+    :root {
+      --bg-gradient: linear-gradient(135deg, #a8edd9 0%, #fed6e3 100%);
+      --glass-bg: rgba(255, 255, 255, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.6);
+      --text-main: #2d3748;
+      --text-muted: #64748b;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2rem 1rem;
+    }
+
+    /* Container Header */
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    /* Glassmorphic Container */
+    .app-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 520px;
+      padding: 2.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    /* Interactive Breathing Section */
+    .breathing-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 2rem 0;
+    }
+
+    .breath-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(168,237,217,0.6) 100%);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      transition: transform 4s ease-in-out;
+      position: relative;
+    }
+
+    /* Animation class added via JS */
+    .breath-circle.expand {
+      transform: scale(1.4);
+    }
+
+    .breath-label {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    /* Controls & Buttons */
+    .btn {
+      background: var(--text-main);
+      color: #ffffff;
+      border: none;
+      padding: 0.85rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: #1e293b;
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    /* Sound Pill Toggles */
+    .sound-grid {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .pill-btn {
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid var(--glass-border);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .pill-btn:hover {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .pill-btn.active {
+      background: var(--text-main);
+      color: #ffffff;
+    }
+
+    /* Counter Badge */
+    .counter-badge {
+      display: inline-block;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.5);
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Mindful Pause</h1>
+    <p>Take a minute to reset your focus</p>
+  </header>
+
+  <main class="app-card">
+    <p style="font-size: 0.95rem; color: var(--text-muted);">
+      Press start, follow the circle, and let your mind unwind.
+    </p>
+
+    <!-- Breathing Exercise Visualizer -->
+    <div class="breathing-container">
+      <div class="breath-circle" id="breathCircle">
+        <span class="breath-label" id="breathLabel">Ready?</span>
+      </div>
+    </div>
+
+    <!-- Action Button -->
+    <button class="btn" id="startBtn">Start Session</button>
+
+    <!-- Ambient Sound Toggles -->
+    <div class="sound-grid">
+      <button class="pill-btn" id="rainBtn">🌧️ Rain</button>
+      <button class="pill-btn" id="wavesBtn">🌊 Waves</button>
+      <button class="pill-btn" id="forestBtn">🌲 Forest</button>
+    </div>
+
+    <!-- Sessions Counter -->
+    <div class="counter-badge">
+      Completed Cycles: <strong id="cycleCount">0</strong>
+    </div>
+  </main>
+
+  <footer>
+    &copy; LW Project 2 — Built for peace of mind
+  </footer>
+
+  <script>
+    // Elements
+    const circle = document.getElementById('breathCircle');
+    const label = document.getElementById('breathLabel');
+    const startBtn = document.getElementById('startBtn');
+    const cycleCountDisplay = document.getElementById('cycleCount');
+    const soundBtns = document.querySelectorAll('.pill-btn');
+
+    let isRunning = false;
+    let timer = null;
+    let cycles = 0;
+
+    // Breathing Logic (4s Inhale, 4s Exhale)
+    function runBreathingCycle() {
+      label.textContent = "Inhale...";
+      circle.classList.add('expand');
+
+      timer = setTimeout(() => {
+        if (!isRunning) return;
+        label.textContent = "Exhale...";
+        circle.classList.remove('expand');
+
+        timer = setTimeout(() => {
+          if (!isRunning) return;
+          cycles++;
+          cycleCountDisplay.textContent = cycles;
+          runBreathingCycle(); // Loop
+        }, 4000);
+      }, 4000);
+    }
+
+    // Toggle Exercise
+    startBtn.addEventListener('click', () => {
+      isRunning = !isRunning;
+
+      if (isRunning) {
+        startBtn.textContent = "Stop Session";
+        startBtn.style.background = "#ef4444"; // Soft red for stop
+        runBreathingCycle();
+      } else {
+        clearTimeout(timer);
+        circle.classList.remove('expand');
+        label.textContent = "Paused";
+        startBtn.textContent = "Resume Session";
+        startBtn.style.background = "var(--text-main)";
+      }
+    });
+
+    // Sound Pill Toggle Interactions
+    soundBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

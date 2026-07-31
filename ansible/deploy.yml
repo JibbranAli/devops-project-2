@@ -1,0 +1,36 @@
+---
+- hosts: worker
+  tasks:
+    - name: Remove old containers
+      community.docker.docker_container:
+        name: meditation
+        state: absent
+
+    - name: Remove Old Image
+      community.docker.docker_image:
+        name: meditation
+        state: absent
+        force_absent: true
+      ignore_errors: true
+
+    - name: Copy Docker image tar
+      ansible.builtin.copy:
+        src: ../meditation.tar
+        dest: /tmp/meditation.tar
+
+    - name: Load Docker Image
+      ansible.builtin.command: docker load -i /tmp/meditation.tar
+
+    - name: Start new containers
+      community.docker.docker_container:
+        name: meditation
+        image: meditation:v1
+        state: started
+        recreate: true
+        ports:
+          - "80:80"
+
+    - name: Verify Deployment
+      ansible.builtin.uri:
+        url: http://localhost
+        status_code: 200
