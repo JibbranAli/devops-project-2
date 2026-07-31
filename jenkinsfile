@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('CLONE') {
+            steps {
+                git 'https://github.com/JibbranAli/devops-project-2.git'
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                sh 'docker build -t meditation:v1 .'
+            }
+        }
+
+        stage('Export Image') {
+            steps {
+                sh 'docker save meditation:v1 -o meditation.tar'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    ansible-playbook \
+                    -i ansible/inventory \
+                    ansible/deploy.yml
+                '''
+            }
+        }
+    }
+}
